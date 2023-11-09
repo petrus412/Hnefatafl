@@ -7,16 +7,22 @@ public class Tile : MonoBehaviour
     private Pawn m_activePawn;
     public bool Tower = false;
     public GameObject TowerPawn;
-    public Pawn GetPawn() => m_activePawn;
-    [HideInInspector]
-    public UnityEvent<Vector2Int> TileSelected = new UnityEvent<Vector2Int>();
-    [HideInInspector]
-    public UnityEvent<Vector2Int> RightClicked = new UnityEvent<Vector2Int>();
     [HideInInspector]
     public Vector2Int ID;
-    public void OnMouseDown()
+    [HideInInspector]
+    public UnityEvent<Vector2Int> LeftClicked = new UnityEvent<Vector2Int>();
+    [HideInInspector]
+    public UnityEvent<Vector2Int> RightClicked = new UnityEvent<Vector2Int>();
+    private void OnMouseDown()
     {
-        TileSelected?.Invoke(ID);
+        LeftClicked?.Invoke(ID);
+    }
+    private void OnMouseOver()
+    {
+        if(Input.GetMouseButtonDown(1))
+        {
+            RightClicked?.Invoke(ID);
+        }
     }
     public void RemovePawn()
     {
@@ -26,11 +32,5 @@ public class Tile : MonoBehaviour
     {
         m_activePawn = t_pawn;
     }
-    private void OnMouseOver()
-    {
-        if(Input.GetMouseButtonDown(1))
-        {
-            RightClicked?.Invoke(ID);
-        }
-    }
+    public Pawn GetPawn() => m_activePawn;
 }

@@ -84,30 +84,30 @@ public class GameManager : MonoBehaviour
     }
     private void StartDefenderTurn()
     {
-        m_grid.RefereshTile();
+        m_grid.RefreshTile();
         foreach (Pawn defender in m_defender)
         {
-            m_grid.GetTileByPawn(defender).TileSelected.AddListener(OnSelectedTileForPawn);
+            m_grid.GetTileByPawn(defender).LeftClicked.AddListener(PawnSelection);
             m_grid.ChangeTileColor(m_grid.GetTileByPawn(defender), "Selectable");
         }
     }
     private void StartKingTurn()
     {
         SelectedPawn = m_king;
-        m_grid.RefereshTile();
+        m_grid.RefreshTile();
         m_grid.ChangeTileColor(m_grid.GetTileByPawn(m_king), "Pawn");
         foreach (Tile tile in m_grid.GetAdiacentNeighbors(m_grid.GetTileByPawn(m_king)))
         {
             if (tile.GetPawn() == null && !tile.Tower)
             {
                 m_grid.ChangeTileColor(tile, "Selectable");
-                tile.TileSelected.AddListener(MovePawn);
+                tile.LeftClicked.AddListener(MovePawn);
             }
         }
     }
-    private void OnSelectedTileForPawn(Vector2Int t_pawn)
+    private void PawnSelection(Vector2Int t_pawn)
     {
-        m_grid.RefereshTile();
+        m_grid.RefreshTile();
         m_grid.ChangeTileColor(m_grid.GetTileByID(t_pawn), "Pawn");
         SelectedPawn = m_grid.GetTileByID(t_pawn).GetPawn();
         m_grid.GetTileByID(t_pawn).RightClicked.AddListener(Back);
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
                 if (tile.GetPawn() == null)
                 {
                     m_grid.ChangeTileColor(tile, "Selectable");
-                    tile.TileSelected.AddListener(MovePawn);
+                    tile.LeftClicked.AddListener(MovePawn);
                 }
             }
         }
@@ -131,21 +131,25 @@ public class GameManager : MonoBehaviour
                 if (CheckTile != null && CheckTile.GetPawn() == null && !CheckTile.Tower)
                 {
                     m_grid.ChangeTileColor(CheckTile, "Selectable");
-                    CheckTile.TileSelected.AddListener(MovePawn);
+                    CheckTile.LeftClicked.AddListener(MovePawn);
                     CheckTile = m_grid.GetTileByID(CheckTile.ID + Utils.FullDirection[i]);
                     if (CheckTile != null && CheckTile.GetPawn() == null && !CheckTile.Tower)
                     {
                         m_grid.ChangeTileColor(CheckTile, "Selectable");
-                        CheckTile.TileSelected.AddListener(MovePawn);
+                        CheckTile.LeftClicked.AddListener(MovePawn);
                     }
 
                 }
             }
         }
     }
+    private void Back(Vector2Int t_id)
+    {
+        StartDefenderTurn();
+    }
     private void MovePawn(Vector2Int t_end)
     {
-        m_grid.RefereshTile();
+        m_grid.RefreshTile();
         Tile EndTile = m_grid.GetTileByID(t_end);
         SelectedPawn.GetComponent<Tweener>().OnComplete.RemoveAllListeners();
         SelectedPawn.transform.parent = null;
@@ -174,10 +178,6 @@ public class GameManager : MonoBehaviour
             return;
         }
         m_turns.ChangeTurn();
-    }
-    private void Back(Vector2Int t_id)
-    {
-        StartDefenderTurn();
     }
     private bool CheckDefenderWincon()
     {

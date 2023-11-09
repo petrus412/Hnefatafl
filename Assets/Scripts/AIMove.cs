@@ -8,7 +8,6 @@ public class AIMove
     {
         public float Distance;
         public int Index;
-
         public Direction(float t_distance, int t_Index)
         {
             Distance = t_distance;

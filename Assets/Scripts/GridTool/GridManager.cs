@@ -50,20 +50,30 @@ public class GridManager : MonoBehaviour
     }
     #endregion
 
-    public Vector2Int GetGridSize()
-    {
-        return m_gridData.Size;
-    }
     private void Awake()
     {
         SaveMatrix();
     }
-    public void RefereshTile()
+    private void SaveMatrix()
+    {
+        m_pawnsPosition = new Dictionary<Pawn, Tile>();
+        m_tiles = new Tile[m_gridData.Size.x, m_gridData.Size.y];
+        foreach (GameObject t_tile in m_tileList)
+        {
+            Vector2Int ID = t_tile.GetComponent<Tile>().ID;
+            m_tiles[ID.x, ID.y] = t_tile.GetComponent<Tile>();
+        }
+    }
+    public Vector2Int GetGridSize()
+    {
+        return m_gridData.Size;
+    }
+    public void RefreshTile()
     {
         foreach (Tile tile in m_alteredTile)
         {
             tile.GetComponentInChildren<MeshRenderer>().material = Resources.Load<Material>("White");
-            tile.TileSelected.RemoveAllListeners();
+            tile.LeftClicked.RemoveAllListeners();
             tile.RightClicked.RemoveAllListeners();
         }
         m_alteredTile.Clear();
@@ -90,6 +100,17 @@ public class GridManager : MonoBehaviour
         else
             return null;
     }
+    public bool AddNewPawn(Pawn t_pawn, Tile t_tile)
+    {
+        if (t_tile.GetPawn() == null)
+        {
+            t_tile.SetPawn(t_pawn);
+            m_pawnsPosition.Add(t_pawn, t_tile);
+            t_pawn.gameObject.transform.position = t_tile.gameObject.transform.position;
+            return true;
+        }
+        return false;
+    }
     public bool MovePawn(Pawn t_pawn, Tile t_tileID)
     {
         Tile StartingTile = GetTileByPawn(t_pawn);
@@ -105,30 +126,6 @@ public class GridManager : MonoBehaviour
             return false;
         }
     }
-    public bool AddNewPawn(Pawn t_pawn, Tile t_tile)
-    {
-        if (t_tile.GetPawn() == null)
-        {
-            t_tile.SetPawn(t_pawn);
-            m_pawnsPosition.Add(t_pawn, t_tile);
-            t_pawn.gameObject.transform.position = t_tile.gameObject.transform.position;
-            return true;
-        }
-        return false;
-    }
-    public bool RemovePawn(Pawn t_pawn)
-    {
-        if (t_pawn != null)
-        {
-            m_pawnsPosition[t_pawn].RemovePawn();
-            return m_pawnsPosition.Remove(t_pawn);
-        }
-        return false;
-    }
-    public Tile[,] GetAllTile()
-    {
-        return m_tiles;
-    }
     public Tile[] GetAdiacentNeighbors(Tile t_tileID)
     {
         List<Tile> Output = new List<Tile>();
@@ -141,28 +138,5 @@ public class GridManager : MonoBehaviour
             }
         }
         return Output.ToArray();
-    }
-    public Tile[] GetNeighbors(Tile t_tileID)
-    {
-        List<Tile> Output = new List<Tile>();
-        for (int i = 0; i < Utils.FullDirection.Length; i++)
-        {
-            Tile Check = GetTileByID(t_tileID.ID + Utils.FullDirection[i]);
-            if (Check != null)
-            {
-                Output.Add(Check);
-            }
-        }
-        return Output.ToArray();
-    }
-    private void SaveMatrix()
-    {
-        m_pawnsPosition = new Dictionary<Pawn, Tile>();
-        m_tiles = new Tile[m_gridData.Size.x, m_gridData.Size.y];
-        foreach (GameObject t_tile in m_tileList)
-        {
-            Vector2Int ID = t_tile.GetComponent<Tile>().ID;
-            m_tiles[ID.x, ID.y] = t_tile.GetComponent<Tile>();
-        }
     }
 }

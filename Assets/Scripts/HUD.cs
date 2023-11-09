@@ -6,10 +6,12 @@ using UnityEngine;
 
 public class HUD : MonoBehaviour
 {
-    public TMP_Text NumberOfTurn;
-    public TMP_Text TurnOrder;
-
-    public GameManager m_GameManager;
+    [SerializeField]
+    private TMP_Text NumberOfTurn;
+    [SerializeField]
+    private TMP_Text TurnOrder;
+    [SerializeField]
+    private GameManager m_GameManager;
     private TurnManager m_turnManager;
 
     private void Awake()

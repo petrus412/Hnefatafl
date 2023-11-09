@@ -3,26 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     [SerializeField]
-    GameObject GameModeMenu;
+    private GameObject GameModeMenu;
     [SerializeField]
-    GameObject NumberOfPlayerSelection;
+    private GameObject NumberOfPlayerMenu;
     [SerializeField]
-    GameObject BackButton;
+    private GameObject BackButton;
     [SerializeField]
-    GameManager m_gameManager;
-    private bool bTowers;
+    private GameManager m_gameManager;
     private bool bPVP;
 
-    public void Awake()
+    private void Awake()
     {
         BackButton.GetComponent<Button>().onClick.AddListener(ShowPlayerSelection);
     }
     private void ShowPlayerSelection()
     {
-        NumberOfPlayerSelection.SetActive(true);
+        NumberOfPlayerMenu.SetActive(true);
         BackButton.SetActive(false);
         GameModeMenu.SetActive(false);
     }
@@ -30,7 +29,7 @@ public class UIManager : MonoBehaviour
     {
         GameModeMenu.SetActive(true);
         BackButton.SetActive(true);
-        NumberOfPlayerSelection.SetActive(false);
+        NumberOfPlayerMenu.SetActive(false);
     }
     public void HideSelf()
     {

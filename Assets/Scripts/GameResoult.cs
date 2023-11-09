@@ -7,13 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class GameResoult : MonoBehaviour
 {
-    public GameManager m_GameManager;
-    public TMP_Text Text;
-    public GameObject Resoult;
+    [SerializeField]
+    private GameManager m_GameManager;
+    [SerializeField]
+    private TMP_Text Text;
+    [SerializeField]
+    private GameObject Resoult;
 
 
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         m_GameManager.EndGameResult.AddListener(ShowEndGame);
     }
