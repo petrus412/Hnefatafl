@@ -128,12 +128,12 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 CheckTile = m_grid.GetTileByID(t_pawn + Utils.FullDirection[i]);
-                if (CheckTile != null && CheckTile.GetPawn() == null)
+                if (CheckTile != null && CheckTile.GetPawn() == null && !CheckTile.Tower)
                 {
                     m_grid.ChangeTileColor(CheckTile, "Selectable");
                     CheckTile.TileSelected.AddListener(MovePawn);
                     CheckTile = m_grid.GetTileByID(CheckTile.ID + Utils.FullDirection[i]);
-                    if (CheckTile != null && CheckTile.GetPawn() == null)
+                    if (CheckTile != null && CheckTile.GetPawn() == null && !CheckTile.Tower)
                     {
                         m_grid.ChangeTileColor(CheckTile, "Selectable");
                         CheckTile.TileSelected.AddListener(MovePawn);
